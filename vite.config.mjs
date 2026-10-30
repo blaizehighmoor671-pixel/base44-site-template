@@ -11,4 +11,14 @@ export default defineConfig({
             "@": path.resolve(__dirname, "./src"),
         }, 
     },
+    server: {
+        // The UI calls the Kotlin -> Mermaid backend on the same origin (`/api/...`).
+        // In production the Ktor server serves both, so dev proxies to a running backend.
+        proxy: {
+            "/api": {
+                target: process.env.KOTLIN_IR_API_URL || "http://localhost:8080",
+                changeOrigin: true,
+            },
+        },
+    },
 })
